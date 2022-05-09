@@ -18,19 +18,15 @@ namespace ReceiveMessageServiceBus1
         public async Task ReceiveMessageFromTopic()
         {
             await using var client = new ServiceBusClient(connectionString);
-            // create the sender
-            ServiceBusReceiver receiver = client.CreateReceiver(topicName);
-
-            // the received message is a different type as it contains some service set properties
+            
+            ServiceBusReceiver receiver = client.CreateReceiver(topicName, "subscriber1", new ServiceBusReceiverOptions { ReceiveMode = ServiceBusReceiveMode.ReceiveAndDelete});
+            
             ServiceBusReceivedMessage receivedMessage = await receiver.ReceiveMessageAsync();
-
-            // get the message body as a string
+            
             string body = receivedMessage.Body.ToString();
             Console.WriteLine(body);
 
-
-
-            Console.WriteLine("Press any key to end the application");
+            Console.WriteLine("Received Message from topic subscription 1.");
             Console.ReadKey();
         }
 
